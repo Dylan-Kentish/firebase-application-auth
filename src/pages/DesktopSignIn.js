@@ -35,7 +35,7 @@ function Dashboard() {
                     result.user.getIdToken()
                         .then((token) => {
                             const code = params.get("ot-auth-code")
-                            fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/create-auth-token?ot-auth-code=${code}&id-token=${token}`)
+                            fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/createAuthToken?ot-auth-code=${code}&id-token=${token}`)
                                 .then((response) => {
                                     response.json()
                                         .then(() => {
