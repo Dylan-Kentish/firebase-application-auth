@@ -45,7 +45,7 @@ function Dashboard() {
                         })
                 }
             })
-    }, [auth, loading, signIn]);
+    }, [loading, signIn]);
 
     return (
         <div className="dashboard">
