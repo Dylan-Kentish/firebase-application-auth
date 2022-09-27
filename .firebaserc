@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "authentication-ab4cc"
-  }
+  },
+  "targets": {
+    "authentication-ab4cc": {
+      "hosting": {
+        "electron": [
+          "electron-authentication"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
