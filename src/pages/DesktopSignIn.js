@@ -15,34 +15,39 @@ function Dashboard() {
         await signInWithRedirect(auth, provider)
     }, [])
 
+
+    const getAuthToken = useCallback(() => {
+        user.getIdToken()
+            .then((token) => {
+                fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/createAuthToken?id-token=${token}`)
+                    .then((response) => {
+                        response.json()
+                            .then((json) => {
+                                window.location.replace(`vortex-client://signIn?authToken=${json.token}`);
+                            });
+                    });
+            });
+    }, [user])
+
     useEffect(() => {
         if (loading) return
 
-        getRedirectResult(auth)
-            .then(result => {
-                if (!result) {
-                    console.log("result is null")
-                    signIn()
-                } else {
-                    console.log("Grabbed the user", result.user)
-
-                    if (!result.user) {
-                        return
+        if (user) {
+            return getAuthToken();
+        } else {
+            getRedirectResult(auth)
+                .then(result => {
+                    if (!result) {
+                        signIn()
+                    } else {
+                        if (!result.user) {
+                            return
+                        }
+                        return getAuthToken();
                     }
-
-                    result.user.getIdToken()
-                        .then((token) => {
-                            fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/createAuthToken?id-token=${token}`)
-                                .then((response) => {
-                                    response.json()
-                                        .then((json) => {
-                                            window.location.replace(`vortex-client://signIn?authToken=${json.token}`)
-                                        })
-                                })
-                        })
-                }
-            })
-    }, [loading, signIn]);
+                })
+        }
+    }, [loading, user, getAuthToken, signIn]);
 
     return (
         <div className="dashboard">
