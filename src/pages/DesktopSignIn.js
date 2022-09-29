@@ -30,16 +30,13 @@ function Dashboard() {
                         return
                     }
 
-                    const params = new URLSearchParams(window.location.search)
-
                     result.user.getIdToken()
                         .then((token) => {
-                            const code = params.get("ot-auth-code")
-                            fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/createAuthToken?ot-auth-code=${code}&id-token=${token}`)
+                            fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/createAuthToken?id-token=${token}`)
                                 .then((response) => {
                                     response.json()
-                                        .then(() => {
-                                            window.close()
+                                        .then((json) => {
+                                            window.location.replace(`vortex-client://signIn?authToken=${json.token}`)
                                         })
                                 })
                         })
