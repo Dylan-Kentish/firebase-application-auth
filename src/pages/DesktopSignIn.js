@@ -15,19 +15,20 @@ function Dashboard() {
         await signInWithRedirect(auth, provider)
     }, [])
 
+    const getAuthToken = useCallback(async (user) => {
+        const token = await user.getIdToken()
 
-    const getAuthToken = useCallback(() => {
-        user.getIdToken()
-            .then((token) => {
-                fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/createAuthToken?id-token=${token}`)
-                    .then((response) => {
-                        response.json()
-                            .then((json) => {
-                                window.location.replace(`vortex-client://signIn?authToken=${json.token}`);
-                            });
-                    });
-            });
-    }, [user])
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${token}`
+            }
+        }
+        const response = await fetch(`https://us-central1-authentication-ab4cc.cloudfunctions.net/api/custom-token`, options)
+        const json = await response.json()
+        window.location.replace(`my-app://signIn?authToken=${json.token}`);
+    }, [])
 
     useEffect(() => {
         if (loading) return
