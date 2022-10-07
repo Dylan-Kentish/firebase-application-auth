@@ -1,4 +1,4 @@
-# firebase-electron-auth
+# firebase-application-auth
 
 This repository demonstrates using the firebase/auth functionality.
 
